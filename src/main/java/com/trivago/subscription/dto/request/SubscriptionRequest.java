@@ -27,7 +27,7 @@ public class SubscriptionRequest {
 
         try {
             Term parsedTerm = Term.valueOf(this.term);
-            LocalDate nextPaymentOn = parsedTerm.getId() == Term.MONTHLY.getId() ? this.startDate.plusMonths(1) : this.startDate.plusYears(1);
+            LocalDate nextPaymentOn = parsedTerm == Term.MONTHLY ? this.startDate.plusMonths(1) : this.startDate.plusYears(1);
             return Subscription.builder()
                     .hotelId(this.hotelId)
                     .startDate(this.startDate)

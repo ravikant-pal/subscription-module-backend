@@ -1,6 +1,7 @@
 package com.trivago.subscription.service.impl;
 
 import com.trivago.subscription.dto.Status;
+import com.trivago.subscription.dto.Term;
 import com.trivago.subscription.dto.request.SubscriptionRequest;
 import com.trivago.subscription.exceptions.ActiveSubscriptionExistsException;
 import com.trivago.subscription.exceptions.InvalidStatusException;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,8 +49,18 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         }
         try {
             Status parsedStatus = Status.valueOf(status);
-            if (parsedStatus == Status.EXPIRED) throw InvalidStatusException.build("status : " + status);
             Subscription subscription = optionalSubscription.get();
+            if (parsedStatus == Status.EXPIRED) {
+                throw InvalidStatusException.build("status : " + status);
+            } else if (parsedStatus == Status.ACTIVE) {
+                LocalDate startDate = LocalDate.now();
+                LocalDate nextPaymentOn = subscription.getTerm() == Term.MONTHLY ? startDate.plusMonths(1) : startDate.plusYears(1);
+                subscription.setStartDate(startDate);
+                subscription.setNextPaymentOn(nextPaymentOn);
+                subscription.setEndDate(null);
+            } else if (parsedStatus == Status.CANCELED) {
+                subscription.setEndDate(LocalDate.now());
+            }
             subscription.setStatus(parsedStatus);
             return subscription;
         } catch (IllegalArgumentException e) {
