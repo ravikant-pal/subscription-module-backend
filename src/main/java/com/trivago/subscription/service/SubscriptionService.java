@@ -1,8 +1,14 @@
 package com.trivago.subscription.service;
 
-import com.trivago.subscription.dto.request.SubscriptionDto;
+import com.trivago.subscription.dto.request.SubscriptionRequest;
 import com.trivago.subscription.model.Subscription;
 
+import java.util.List;
+
 public interface SubscriptionService {
-    Subscription save(SubscriptionDto subscriptionDto);
+    Subscription save(SubscriptionRequest subscriptionRequest);
+
+    List<Subscription> getAllSubscriptions();
+
+    Subscription changeStatus(Long id, String status);
 }

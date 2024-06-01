@@ -1,12 +1,14 @@
 package com.trivago.subscription.controller;
 
-import com.trivago.subscription.dto.request.SubscriptionDto;
+import com.trivago.subscription.dto.request.SubscriptionRequest;
 import com.trivago.subscription.model.Subscription;
 import com.trivago.subscription.service.SubscriptionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Validated
 @RestController
@@ -16,8 +18,18 @@ public class SubscriptionController {
     private SubscriptionService subscriptionService;
 
     @PostMapping
-    public Subscription createSubscription(@Valid @RequestBody SubscriptionDto subscription) {
+    public Subscription createSubscription(@Valid @RequestBody SubscriptionRequest subscription) {
         return subscriptionService.save(subscription);
+    }
+
+    @GetMapping
+    public List<Subscription> getAllSubscriptions() {
+        return subscriptionService.getAllSubscriptions();
+    }
+
+    @PutMapping("/{id}")
+    public Subscription updateStatus(@PathVariable Long id, @RequestParam String status) {
+        return subscriptionService.changeStatus(id,status);
     }
 }
 

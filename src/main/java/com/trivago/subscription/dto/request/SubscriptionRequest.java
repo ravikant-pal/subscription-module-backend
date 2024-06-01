@@ -11,7 +11,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class SubscriptionDto {
+public class SubscriptionRequest {
 
     @NotNull(message = "Hotel ID is required")
     private Long hotelId;
