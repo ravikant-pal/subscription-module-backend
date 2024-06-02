@@ -13,6 +13,7 @@ import java.util.List;
 @Validated
 @RestController
 @RequestMapping("/api/subscriptions")
+@CrossOrigin(origins = "http://localhost:3000")
 public class SubscriptionController {
     @Autowired
     private SubscriptionService subscriptionService;

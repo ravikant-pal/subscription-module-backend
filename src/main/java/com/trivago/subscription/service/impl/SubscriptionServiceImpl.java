@@ -37,7 +37,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public List<Subscription> getAllSubscriptions() {
-        return subscriptionRepository.findAll();
+        return subscriptionRepository.findAllByOrderByStartDateDesc();
     }
 
     @Override

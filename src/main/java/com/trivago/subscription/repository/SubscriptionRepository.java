@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface SubscriptionRepository extends JpaRepository<Subscription, Long> {
+    List<Subscription> findAllByOrderByStartDateDesc();
     List<Subscription> findByHotelId(long hotelId);
 }
 
