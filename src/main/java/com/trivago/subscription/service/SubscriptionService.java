@@ -8,7 +8,7 @@ import java.util.List;
 public interface SubscriptionService {
     Subscription save(SubscriptionRequest subscriptionRequest);
 
-    List<Subscription> getAllSubscriptions();
+    List<Subscription> getAllSubscriptions(String status, String startDate);
 
     Subscription changeStatus(Long id, String status);
 }

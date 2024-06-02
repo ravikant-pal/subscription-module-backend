@@ -24,8 +24,8 @@ public class SubscriptionController {
     }
 
     @GetMapping
-    public List<Subscription> getAllSubscriptions() {
-        return subscriptionService.getAllSubscriptions();
+    public List<Subscription> getAllSubscriptions(@RequestParam(required = false) String status, @RequestParam(required = false) String startDate) {
+        return subscriptionService.getAllSubscriptions(status, startDate);
     }
 
     @PutMapping("/{id}")

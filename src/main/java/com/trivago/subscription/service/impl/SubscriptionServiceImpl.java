@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +24,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Autowired
     private SubscriptionRepository subscriptionRepository;
+
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     @Override
     @Transactional
@@ -36,8 +39,18 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public List<Subscription> getAllSubscriptions() {
-        return subscriptionRepository.findAllByOrderByStartDateDesc();
+    public List<Subscription> getAllSubscriptions(String status, String startDate) {
+        if (status != null && startDate != null) {
+            LocalDate parsedStartDate = LocalDate.parse(startDate, formatter);
+            return subscriptionRepository.findAllByStatusAndStartDateOrderByStartDateDesc(Status.valueOf(status), parsedStartDate);
+        } else if (status != null) {
+            return subscriptionRepository.findAllByStatusOrderByStartDateDesc(Status.valueOf(status));
+        } else if (startDate != null) {
+            LocalDate parsedStartDate = LocalDate.parse(startDate, formatter);
+            return subscriptionRepository.findAllByStartDateOrderByStartDateDesc(parsedStartDate);
+        } else {
+            return subscriptionRepository.findAllByOrderByStartDateDesc();
+        }
     }
 
     @Override

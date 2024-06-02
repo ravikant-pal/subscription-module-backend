@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Data
 public class SubscriptionRequest {
@@ -18,7 +19,7 @@ public class SubscriptionRequest {
 
     @NotNull(message = "Start date is required")
     @FutureOrPresent(message = "Start date must be in the present or future")
-    private LocalDate startDate;
+    private String startDate;
 
     @NotNull(message = "Term is required")
     private String term;
@@ -27,10 +28,12 @@ public class SubscriptionRequest {
 
         try {
             Term parsedTerm = Term.valueOf(this.term);
-            LocalDate nextPaymentOn = parsedTerm == Term.MONTHLY ? this.startDate.plusMonths(1) : this.startDate.plusYears(1);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate parsedStartDate = LocalDate.parse(this.startDate, formatter);
+            LocalDate nextPaymentOn = parsedTerm == Term.MONTHLY ? parsedStartDate.plusMonths(1) : parsedStartDate.plusYears(1);
             return Subscription.builder()
                     .hotelId(this.hotelId)
-                    .startDate(this.startDate)
+                    .startDate(parsedStartDate)
                     .nextPaymentOn(nextPaymentOn)
                     .term(parsedTerm)
                     .status(Status.ACTIVE)
