@@ -1,0 +1,40 @@
+spring:
+  # ===============================
+  # ===== Application config ======
+  # ===============================
+
+  application:
+    name: subscription-service
+  # ===============================
+  # ===== Datasource config =======
+  # ===============================
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/trivago_subscription_db?characterEncoding=UTF-8
+    driver-class-name: org.postgresql.Driver
+    username: app_user
+    password: app_password
+    platform: postgres
+  # ===============================
+  # ========= JPA config ==========
+  # ===============================
+
+  jpa:
+    hibernate:
+      ddl-auto: update #create-drop
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 5
+
+# ===============================
+# ======== Swagger config =======
+# ===============================
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    operations-sorter: alpha
+    tagsSorter: alpha
+    enabled: 'true'
+  packages-to-scan: com.trivago.subscription
