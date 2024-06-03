@@ -25,7 +25,7 @@ public class SubscriptionExceptionHandler {
 
     @ExceptionHandler(ActiveSubscriptionExistsException.class)
     public ResponseEntity<String> handleActiveSubscriptionExistsException(ActiveSubscriptionExistsException ex) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
     @ExceptionHandler(InvalidTermException.class)
