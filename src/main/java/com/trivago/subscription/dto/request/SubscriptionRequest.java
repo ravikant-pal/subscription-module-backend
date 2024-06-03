@@ -19,7 +19,7 @@ public class SubscriptionRequest {
 
     @NotNull(message = "Start date is required")
     @FutureOrPresent(message = "Start date must be in the present or future")
-    private String startDate;
+    private LocalDate startDate;
 
     @NotNull(message = "Term is required")
     private String term;
@@ -28,12 +28,10 @@ public class SubscriptionRequest {
 
         try {
             Term parsedTerm = Term.valueOf(this.term);
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            LocalDate parsedStartDate = LocalDate.parse(this.startDate, formatter);
-            LocalDate nextPaymentOn = parsedTerm == Term.MONTHLY ? parsedStartDate.plusMonths(1) : parsedStartDate.plusYears(1);
+            LocalDate nextPaymentOn = parsedTerm == Term.MONTHLY ? this.startDate.plusMonths(1) : this.startDate.plusYears(1);
             return Subscription.builder()
                     .hotelId(this.hotelId)
-                    .startDate(parsedStartDate)
+                    .startDate(this.startDate)
                     .nextPaymentOn(nextPaymentOn)
                     .term(parsedTerm)
                     .status(Status.ACTIVE)

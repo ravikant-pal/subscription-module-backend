@@ -8,7 +8,10 @@ spring:
   # ===============================
   # ===== Datasource config =======
   # ===============================
-
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:/sql/schema.sql
   datasource:
     url: jdbc:postgresql://localhost:5432/trivago_subscription_db?characterEncoding=UTF-8
     driver-class-name: org.postgresql.Driver
@@ -26,6 +29,7 @@ spring:
       hibernate:
         jdbc:
           batch_size: 5
+    show-sql: true
 
 # ===============================
 # ======== Swagger config =======
