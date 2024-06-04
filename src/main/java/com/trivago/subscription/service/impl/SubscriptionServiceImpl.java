@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -39,17 +40,32 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public List<Subscription> getAllSubscriptions(String status, String startDate) {
-        if (status != null && startDate != null) {
-            LocalDate parsedStartDate = LocalDate.parse(startDate, formatter);
-            return subscriptionRepository.findAllByStatusAndStartDateOrderByStartDateDesc(Status.valueOf(status), parsedStartDate);
-        } else if (status != null) {
-            return subscriptionRepository.findAllByStatusOrderByStartDateDesc(Status.valueOf(status));
-        } else if (startDate != null) {
-            LocalDate parsedStartDate = LocalDate.parse(startDate, formatter);
-            return subscriptionRepository.findAllByStartDateOrderByStartDateDesc(parsedStartDate);
+    public List<Subscription> getAllSubscriptions(String status, String monthAndYear) {
+        if (monthAndYear != null) {
+            YearMonth yearMonth = YearMonth.parse(monthAndYear, formatter);
+
+            LocalDate startDate = yearMonth.atDay(1);
+            LocalDate endDate = yearMonth.atEndOfMonth();
+
+            if (status != null) {
+                if (Status.valueOf(status) == Status.EXPIRED) {
+                    return subscriptionRepository.findByEndDateLessThanEqual(LocalDate.now());
+                } else {
+                    return subscriptionRepository.findAllByStatusAndStartDateBetweenOrderByStartDateDesc(Status.valueOf(status), startDate, endDate);
+                }
+            } else {
+                return subscriptionRepository.findAllByStartDateBetweenOrderByStartDateDesc(startDate, endDate);
+            }
         } else {
-            return subscriptionRepository.findAllByOrderByStartDateDesc();
+            if (status != null) {
+                if (Status.valueOf(status) == Status.EXPIRED) {
+                    return subscriptionRepository.findByEndDateLessThanEqual(LocalDate.now());
+                } else {
+                    return subscriptionRepository.findAllByStatusOrderByStartDateDesc(Status.valueOf(status));
+                }
+            } else {
+                return subscriptionRepository.findAllByOrderByStartDateDesc();
+            }
         }
     }
 
@@ -72,7 +88,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 subscription.setNextPaymentOn(nextPaymentOn);
                 subscription.setEndDate(null);
             } else if (parsedStatus == Status.CANCELED) {
-                subscription.setEndDate(LocalDate.now());
+                subscription.setEndDate(subscription.getNextPaymentOn().plusDays(1));
             }
             subscription.setStatus(parsedStatus);
             return subscription;

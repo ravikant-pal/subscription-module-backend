@@ -20,18 +20,6 @@ import java.util.Map;
 
 
 
-/*
- TODO: 1. Create the database schema. ✅
-  2. discuss the logic of subscription status like ACTIVE, EXPIRED and CANCELED
-  3. Create an audit table that stores the history of changes in a subscription.
-  4. Docker file for frontend UI
-  5. run with docker compose
-  6. Provide detailed instructions on how to execute code
-  2. Retrieve subscriptions by start date month
-
- */
-
-
 @Validated
 @RestController
 @RequestMapping("/api/subscriptions")

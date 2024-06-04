@@ -10,14 +10,17 @@ import java.util.List;
 
 @Repository
 public interface SubscriptionRepository extends JpaRepository<Subscription, Long> {
+    List<Subscription> findByHotelId(long hotelId);
+
     List<Subscription> findAllByOrderByStartDateDesc();
+
+    List<Subscription> findByEndDateLessThanEqual(LocalDate date);
 
     List<Subscription> findAllByStatusOrderByStartDateDesc(Status status);
 
-    List<Subscription> findAllByStartDateOrderByStartDateDesc(LocalDate startDate);
+    List<Subscription> findAllByStartDateBetweenOrderByStartDateDesc(LocalDate startDate, LocalDate endDate);
 
-    List<Subscription> findAllByStatusAndStartDateOrderByStartDateDesc(Status status, LocalDate startDate);
+    List<Subscription> findAllByStatusAndStartDateBetweenOrderByStartDateDesc(Status status, LocalDate startDate, LocalDate endDate);
 
-    List<Subscription> findByHotelId(long hotelId);
 }
 
