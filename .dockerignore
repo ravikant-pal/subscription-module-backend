@@ -1,0 +1,22 @@
+# Ignore Maven build directory
+target/
+
+# Ignore IDE files
+.idea/
+*.iml
+
+# Ignore logs
+logs/
+
+# Ignore temporary files
+*.tmp
+
+# Ignore compiled Java classes
+*.class
+
+# Ignore Docker-related files
+.dockerignore
+.docker/
+
+# Ignore test reports
+test-output/
